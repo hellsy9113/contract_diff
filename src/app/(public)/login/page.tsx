@@ -1,8 +1,9 @@
 "use client";
 
+import { Suspense } from "react";
 import axios from "axios";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -12,7 +13,6 @@ import { loginSchema } from "@/schemas/loginSchema";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useSearchParams } from "next/navigation";
 import {
     Form,
     FormControl,
@@ -25,6 +25,26 @@ import {
 type LoginForm = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
+    return (
+        <Suspense fallback={<LoginPageFallback />}>
+            <LoginFormContent />
+        </Suspense>
+    );
+}
+
+function LoginPageFallback() {
+    return (
+        <div className="container flex min-h-[80vh] items-center justify-center">
+            <div className="w-full max-w-md rounded-xl border p-8">
+                <h1 className="mb-6 text-3xl font-bold">
+                    Login
+                </h1>
+            </div>
+        </div>
+    );
+}
+
+function LoginFormContent() {
     const router = useRouter();
     
     const form = useForm<LoginForm>({
@@ -37,8 +57,9 @@ export default function LoginPage() {
 
     const searchParams = useSearchParams();
 
-const verified =
-  searchParams.get("verified") === "true";
+    const verified =
+        searchParams.get("verified") === "true";
+
     async function onSubmit(values: LoginForm) {
         try {
             await axios.post("/api/login", values);
@@ -61,6 +82,12 @@ const verified =
                 <h1 className="mb-6 text-3xl font-bold">
                     Login
                 </h1>
+
+                {verified ? (
+                    <p className="mb-5 rounded-md border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-700">
+                        Email verified. You can now log in.
+                    </p>
+                ) : null}
 
                 <Form {...form}>
 
