@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { toast } from "sonner";
 
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -37,8 +38,8 @@ export default function LoginPage() {
 
 function LoginPageFallback() {
     return (
-        <div className="container flex min-h-[80vh] items-center justify-center">
-            <div className="w-full max-w-md rounded-xl border p-8">
+        <div className="mx-auto flex min-h-[calc(100svh-72px)] w-full max-w-7xl items-center justify-center px-4 py-10 sm:px-6 lg:px-8">
+            <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white/90 p-8 shadow-[0_24px_60px_-40px_rgba(15,23,42,0.3)] backdrop-blur">
                 <h1 className="mb-6 text-3xl font-bold">
                     Login
                 </h1>
@@ -80,16 +81,16 @@ function LoginFormContent() {
                     ? error.response?.data?.message
                     : undefined;
 
-            alert(
-                message ?? "Login failed"
+            toast.error(
+                message ?? "Login failed. Please check your credentials."
             );
         }
     }
 
     return (
-        <div className="container flex min-h-[80vh] items-center justify-center">
+        <div className="mx-auto flex min-h-[calc(100svh-72px)] w-full max-w-7xl items-center justify-center px-4 py-10 sm:px-6 lg:px-8">
 
-            <div className="w-full max-w-md rounded-xl border p-8">
+            <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white/90 p-8 shadow-[0_24px_60px_-40px_rgba(15,23,42,0.3)] backdrop-blur">
 
                 <h1 className="mb-6 text-3xl font-bold">
                     Login

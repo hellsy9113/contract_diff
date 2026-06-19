@@ -6,6 +6,8 @@ import {
   Playfair_Display,
 } from "next/font/google";
 
+import { Toaster } from "sonner";
+
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
@@ -31,11 +33,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "ContractDiff",
+    default: "ContractDiff — AI Contract Comparison",
     template: "%s | ContractDiff",
   },
   description:
-    "AI-powered contract comparison platform",
+    "Upload two contract versions and instantly identify additions, deletions, and modifications with AI-powered comparison.",
 };
 
 export default function RootLayout({
@@ -57,6 +59,16 @@ export default function RootLayout({
     >
       <body className="min-h-screen bg-background font-sans text-foreground">
         {children}
+        <Toaster
+          position="top-right"
+          richColors
+          closeButton
+          toastOptions={{
+            style: {
+              fontFamily: "var(--font-sans)",
+            },
+          }}
+        />
       </body>
     </html>
   );

@@ -1,20 +1,25 @@
-import { email } from "zod";
-import {z} from "zod"
+import { z } from "zod";
 
-export const signupSchema=z.object({
-    email:z
+export const signupSchema = z.object({
+  email: z
     .string()
-    .email({message:"invalid email address"}),
+    .email({ message: "Invalid email address" }),
 
-    password:
-     z.string()
-     .min(8,{message:"invalid email address"})
-     .max(50),
-
-    fullName:z
+  password: z
     .string()
-      .min(2,{message:"iname must greater than 1 character"})
-     .max(100),
+    .min(8, {
+      message:
+        "Password must be at least 8 characters long",
+    })
+    .max(50),
 
+  fullName: z
+    .string()
+    .min(2, {
+      message:
+        "Name must be at least 2 characters long",
+    })
+    .max(100),
 });
+
 export type SignupInput = z.infer<typeof signupSchema>;

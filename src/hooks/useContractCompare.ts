@@ -1,6 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 import {
   compareContracts,
@@ -23,7 +28,8 @@ const initialState: CompareState = {
 
 export function useContractCompare() {
   const pdfUrlRef = useRef<string | null>(null);
-  const [state, setState] = useState<CompareState>(initialState);
+  const [state, setState] =
+    useState<CompareState>(initialState);
 
   const revokePdfUrl = useCallback(() => {
     if (pdfUrlRef.current) {
@@ -38,7 +44,10 @@ export function useContractCompare() {
   }, [revokePdfUrl]);
 
   const compare = useCallback(
-    async (originalFile: File, revisedFile: File) => {
+    async (
+      originalFile: File,
+      revisedFile: File
+    ): Promise<CompareEngineResponse> => {
       revokePdfUrl();
 
       setState({
@@ -49,10 +58,16 @@ export function useContractCompare() {
       });
 
       try {
-        const result = await compareContracts(originalFile, revisedFile);
+        const result = await compareContracts(
+          originalFile,
+          revisedFile
+        );
 
         if (result.kind === "pdf") {
-          const pdfUrl = URL.createObjectURL(result.blob);
+          const pdfUrl = URL.createObjectURL(
+            result.blob
+          );
+
           pdfUrlRef.current = pdfUrl;
 
           setState({
@@ -62,33 +77,43 @@ export function useContractCompare() {
             error: null,
           });
 
-          return;
+          return result;
         }
 
         setState({
           loading: false,
           result,
           pdfUrl: null,
-          error: result.kind === "failed" ? result.message : null,
-        });
-      } catch (error) {
-        setState({
-          loading: false,
-          result: null,
-          pdfUrl: null,
           error:
+            result.kind === "failed"
+              ? result.message
+              : null,
+        });
+
+        return result;
+      } catch (error) {
+        const failedResult: CompareEngineResponse = {
+          kind: "failed",
+          message:
             error instanceof Error
               ? error.message
               : "Something went wrong.",
+        };
+
+        setState({
+          loading: false,
+          result: failedResult,
+          pdfUrl: null,
+          error: failedResult.message,
         });
+
+        return failedResult;
       }
     },
     [revokePdfUrl]
   );
 
-  useEffect(() => {
-    return revokePdfUrl;
-  }, [revokePdfUrl]);
+  useEffect(() => revokePdfUrl, [revokePdfUrl]);
 
   return {
     loading: state.loading,
