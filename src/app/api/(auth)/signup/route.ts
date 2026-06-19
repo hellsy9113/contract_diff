@@ -20,15 +20,19 @@ export async function POST(req: Request) {
     }
 
     const { email, password, fullName } = result.data;
-    const supabase=await createClient();
-    const { error } = await supabase.auth.signUp({
+    const supabase = await createClient();
+    const origin =
+      req.headers.get("origin") ??
+      process.env.NEXT_PUBLIC_SITE_URL;
+
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
         data: {
           fullName,
         },
-        emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/api/callback`,
+        emailRedirectTo: `${origin}/auth/callback?flow=signup`,
       },
     });
 
@@ -39,6 +43,21 @@ export async function POST(req: Request) {
           message: error.message,
         },
         { status: 400 }
+      );
+    }
+
+    if (
+      data.user &&
+      Array.isArray(data.user.identities) &&
+      data.user.identities.length === 0
+    ) {
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "Account already exists. Please log in or reset your password.",
+        },
+        { status: 409 }
       );
     }
 
