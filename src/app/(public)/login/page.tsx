@@ -49,7 +49,7 @@ function LoginPageFallback() {
 
 function LoginFormContent() {
     const router = useRouter();
-    
+
     const form = useForm<LoginForm>({
         resolver: zodResolver(loginSchema),
         defaultValues: {
@@ -62,6 +62,11 @@ function LoginFormContent() {
 
     const verified =
         searchParams.get("verified") === "true";
+    const passwordUpdated =
+        searchParams.get("password_updated") ===
+        "true";
+    const authError =
+        searchParams.get("error");
 
     async function onSubmit(values: LoginForm) {
         try {
@@ -93,6 +98,20 @@ function LoginFormContent() {
                 {verified ? (
                     <p className="mb-5 rounded-md border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-700">
                         Email verified. You can now log in.
+                    </p>
+                ) : null}
+
+                {passwordUpdated ? (
+                    <p className="mb-5 rounded-md border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-700">
+                        Password updated. You can now log in.
+                    </p>
+                ) : null}
+
+                {authError ? (
+                    <p className="mb-5 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+                        {authError === "missing_code"
+                            ? "The link is missing required authentication information."
+                            : "The authentication link is invalid or has expired."}
                     </p>
                 ) : null}
 
@@ -162,6 +181,15 @@ function LoginFormContent() {
                 </Form>
 
                 <p className="mt-6 text-center text-sm">
+                    <Link
+                        href="/forgot-password"
+                        className="font-medium underline"
+                    >
+                        Forgot password?
+                    </Link>
+                </p>
+
+                <p className="mt-4 text-center text-sm">
 
                     Don&apos;t have an account?{" "}
 

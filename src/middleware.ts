@@ -48,10 +48,13 @@ export async function middleware(
     "/",
     "/login",
     "/signup",
+    "/forgot-password",
     "/verify-email",
+    "/auth/callback",
     "/callback",
     "/api/login",
     "/api/signup",
+    "/api/modify",
     "/api/callback"
   ];
 
@@ -59,6 +62,11 @@ export async function middleware(
     publicRoutes.includes(
       request.nextUrl.pathname
     );
+  const isAuthCallbackRoute = [
+    "/auth/callback",
+    "/callback",
+    "/api/callback",
+  ].includes(request.nextUrl.pathname);
 
   if (!user && !isPublicRoute) {
     return NextResponse.redirect(
@@ -66,7 +74,11 @@ export async function middleware(
     );
   }
 
-  if (user && isPublicRoute) {
+  if (
+    user &&
+    isPublicRoute &&
+    !isAuthCallbackRoute
+  ) {
     return NextResponse.redirect(
       new URL("/dashboard", request.url)
     );
