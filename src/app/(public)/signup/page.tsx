@@ -8,8 +8,6 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { loginSchema } from "@/schemas/loginSchema";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -24,6 +22,9 @@ import {
 import { signupSchema } from "@/schemas/signupSchema";
 
 type SignUpForm = z.infer<typeof signupSchema>;
+type ErrorResponse = {
+    message?: string;
+};
 
 export default function LoginPage() {
     const router = useRouter();
@@ -43,10 +44,14 @@ export default function LoginPage() {
 
             router.push("/verify-email");
             router.refresh();
-        } catch (error: any) {
+        } catch (error) {
+            const message =
+                axios.isAxiosError<ErrorResponse>(error)
+                    ? error.response?.data?.message
+                    : undefined;
+
             alert(
-                error.response?.data?.message ??
-                "signup failed"
+                message ?? "signup failed"
             );
         }
     }

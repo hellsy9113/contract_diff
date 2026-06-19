@@ -23,6 +23,9 @@ import {
 } from "@/components/ui/form";
 
 type LoginForm = z.infer<typeof loginSchema>;
+type ErrorResponse = {
+    message?: string;
+};
 
 export default function LoginPage() {
     return (
@@ -66,10 +69,14 @@ function LoginFormContent() {
 
             router.push("/dashboard");
             router.refresh();
-        } catch (error: any) {
+        } catch (error) {
+            const message =
+                axios.isAxiosError<ErrorResponse>(error)
+                    ? error.response?.data?.message
+                    : undefined;
+
             alert(
-                error.response?.data?.message ??
-                    "Login failed"
+                message ?? "Login failed"
             );
         }
     }
@@ -156,7 +163,7 @@ function LoginFormContent() {
 
                 <p className="mt-6 text-center text-sm">
 
-                    Don't have an account?{" "}
+                    Don&apos;t have an account?{" "}
 
                     <Link
                         href="/signup"

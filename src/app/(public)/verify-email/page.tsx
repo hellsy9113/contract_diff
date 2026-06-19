@@ -8,7 +8,7 @@ export default function VerificationPage() {
             <h1>Verify your email</h1>
 
             <p>
-                We've sent a verification link to your email address.
+                We&apos;ve sent a verification link to your email address.
                 Please click the link before logging in.
             </p>
 

@@ -21,14 +21,14 @@ export async function POST(req: Request) {
 
     const { email, password, fullName } = result.data;
     const supabase=await createClient();
-    const { data, error } = await supabase.auth.signUp({
+    const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
         data: {
           fullName,
         },
-        emailRedirectTo:`${process.env.NEXT_PUBLIC_SITE_URL}/callback`
+        emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/api/callback`,
       },
     });
 

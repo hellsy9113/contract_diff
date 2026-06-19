@@ -48,8 +48,10 @@ export async function middleware(
     "/",
     "/login",
     "/signup",
-     "/api/login",
-  "/api/signup",
+    "/verify-email",
+    "/callback",
+    "/api/login",
+    "/api/signup",
     "/api/callback"
   ];
 
