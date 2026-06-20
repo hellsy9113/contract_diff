@@ -4,9 +4,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import {
+  FolderOpen,
   GitCompare,
   Home,
   LogOut,
+  Rows3,
   ShieldCheck,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -55,10 +57,26 @@ export default function DashboardNavbar() {
 
         <div className="hidden items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-600 shadow-sm md:flex">
           <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
-          Annotated PDF workflow
+          Secure comparison workspace
         </div>
 
         <div className="flex items-center gap-3">
+          <Link
+            href="/dashboard/compare"
+            className="hidden items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50 md:inline-flex"
+          >
+            <Rows3 className="h-4 w-4" />
+            New comparison
+          </Link>
+
+          <Link
+            href="/dashboard/comparisons"
+            className="hidden items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50 lg:inline-flex"
+          >
+            <FolderOpen className="h-4 w-4" />
+            Saved comparisons
+          </Link>
+
           <Link
             href="/"
             className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50"
